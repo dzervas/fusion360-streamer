@@ -7,3 +7,7 @@ name = "pypi"
 requests = "*"
 prettyformatter = "*"
 humanize = "4.6.0"
+pyqt5 = "*"
+
+[dev-packages]
+autopep8 = "*"
