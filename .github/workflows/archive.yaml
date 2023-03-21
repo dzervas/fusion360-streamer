@@ -1,0 +1,22 @@
+name: Archive Version
+
+on:
+  schedule:
+    - cron: "0 0 * * *"
+
+jobs:
+  store:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install Python dependencies
+        run: |
+          pip install pipenv
+          pipenv install --dev
+
+      - name: Store to Archive.org
+        run: pipenv run python -m fusion360-streamer
+        env:
+          STORE_TO_ARCHIVE: 1

@@ -1,3 +1,4 @@
+from .constants import PACKAGE_TAR_URL, ARCHIVE_GET_URL, ARCHIVE_SAVE_URL
 from hashlib import sha1
 from humanize import naturalsize
 import os
@@ -15,11 +16,11 @@ def sha1sum(filename):
 
 
 class Package():
-	source_id = None
-	size = None
-	destination = None
-	_cfg_src = None
-	json = None
+	source_id: str = None
+	size: str = None
+	destination: str = None
+	_cfg_src: str = None
+	json: dict = None
 
 	def __init__(self, package_json):
 		self.json = package_json
@@ -29,7 +30,7 @@ class Package():
 		self.destination = package_json["properties"]["destination"] if "destination" in package_json["properties"] else "Unknown"
 
 	@property
-	def info(self):
+	def info(self) -> dict:
 		return {
 			"source-id": self.source_id,
 			"size": self.size,
@@ -37,7 +38,18 @@ class Package():
 			"_cfg-src": self._cfg_src,
 		}
 
-	def download(self, session, output_dir):
+	def _store_to_archive_if_required(self, session) -> None:
+		"""Store the package to the archive if it is not already there."""
+		if "non-patched" not in self.json:
+			print("Skipping package", self.source_id, "as it has no non-patched files.")
+			print("JSON:", self.json)
+			return
+
+		for f in self.json["non-patched"]:
+			file = f + ".tar.xz"
+			session.get(ARCHIVE_SAVE_URL.format(PACKAGE_TAR_URL.format(file)))
+
+	def download(self, session, output_dir, timestamp=None) -> None:
 		"""Download the package to a destination."""
 		if "non-patched" not in self.json:
 			print("Skipping package", self.source_id, "as it has no non-patched files.")
@@ -55,11 +67,15 @@ class Package():
 				continue
 
 			print("Downloading package", file)
-			response = session.get(f"https://dl.appstreaming.autodesk.com/production/packages/{file}")
+			if timestamp:
+				response = session.get(ARCHIVE_GET_URL.format(timestamp, PACKAGE_TAR_URL.format(file)))
+			else:
+				response = session.get(PACKAGE_TAR_URL.format(file))
+
 			with open(os.path.join(output_dir, file), "wb") as f:
 				f.write(response.content)
 
-	def extract(self, output_dir):
+	def extract(self, output_dir) -> None:
 		if "non-patched" not in self.json:
 			print("Skipping package", self.source_id, "as it has no non-patched files.")
 			print("JSON:", self.json)
@@ -79,5 +95,5 @@ class Package():
 			with tarfile.open(os.path.join(output_dir, file), "r:xz") as tar:
 				tar.extractall(dest)
 
-	def __str__(self):
+	def __str__(self) -> str:
 		return f"Package: {self.source_id} ({self.size})"

@@ -10,3 +10,12 @@ OSIDS = {
 APPIDS = {
 	"fusion360": FUSION360_APPID,
 }
+
+# URLs
+APPLICATION_JSON_URL = "https://dl.appstreaming.autodesk.com/production/{}/{}/full.json"
+PACKAGE_JSON_URL = "https://dl.appstreaming.autodesk.com/production/packages/{}.json"
+PACKAGE_TAR_URL = "https://dl.appstreaming.autodesk.com/production/packages/{}.tar"
+ARCHIVE_GET_URL = "https://web.archive.org/web/{}/{}"
+ARCHIVE_SAVE_URL = "https://web.archive.org/save/{}"
+ARCHIVE_SEARCH_URL = "https://web.archive.org/cdx/search?limit=-{}&output=json&url={}"
+ARCHIVE_AVAILABILITY_URL = "https://archive.org/wayback/available?closest=now&url={}"
