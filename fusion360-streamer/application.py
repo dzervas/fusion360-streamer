@@ -12,13 +12,14 @@ class Application():
 	session: requests.Session = None
 	full_json: dict = None
 	packages: list[Package] = []
-	# sub_applications = []
+	sub_applications = []
 
 	def __init__(self, app_id=FUSION360_APPID, os_id=WINDOWS_OSID, session=requests.Session(), archive_timestamp=None):
 		self.app_id = app_id
 		self.os_id = os_id
 		self.session = session
 		self.sub_applications = []
+		self.packages = []
 		self.full_json = self._get_full_json(archive_timestamp)
 
 	def _get_full_json(self, archive_timestamp=None) -> dict:
