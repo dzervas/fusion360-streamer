@@ -28,7 +28,7 @@ jobs:
 
       - name: Find last version from tag
         id: get-version
-        run: echo "version=$(grep 'version=' setup.py | command grep -o '[0-9.-]\+')" >> $GITHUB_OUTPUT
+        run: echo "version=$(python -c 'import fusion360_streamer; print(fusion360_streamer.__version__)')" >> $GITHUB_OUTPUT
 
       - uses: actions-ecosystem/action-bump-semver@v1
         id: semver
@@ -37,7 +37,7 @@ jobs:
           level: ${{ github.event.inputs.level }}
 
       - name: Bump setup.py version
-        run: sed -Ei 's/(^\s+version=)"${{ steps.get-version.outputs.version }}"/\1"${{ steps.semver.outputs.new_version }}"/' setup.py
+        run: sed -Ei 's/(^__version__ = )"${{ steps.get-version.outputs.version }}"/\1"${{ steps.semver.outputs.new_version }}"/' fusion360_streamer/__init__.py
 
       - name: Commit changes
         uses: stefanzweifel/git-auto-commit-action@v4
@@ -76,12 +76,6 @@ jobs:
         run: |
           pip install pipenv
           pipenv install --dev
-
-      - run: pipenv run pip install macholib
-        if: matrix.os == 'macos-latest'
-
-      - run: pipenv run pip install pywin32 pywin32-ctypes pefile
-        if: matrix.os == 'windows-latest'
 
       - name: Build executable
         run: pipenv run pyinstaller --onefile --clean --noconsole --distpath dist --workpath build --name fusion360-streamer fusion360_streamer/__main__.py

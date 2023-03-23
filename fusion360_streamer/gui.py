@@ -2,6 +2,7 @@ from fusion360_streamer.application import Application
 from fusion360_streamer.constants import WINDOWS_OSID, OSX_OSID
 from PyQt5.QtWidgets import QWidget, QPushButton, QProgressBar, QLabel, QComboBox, QVBoxLayout, QHBoxLayout, QCheckBox, QFileDialog, QLineEdit
 from PyQt5.QtCore import QRect
+from importlib.metadata import version
 import sys
 
 
@@ -10,7 +11,7 @@ class Gui(QWidget):
 		super().__init__()
 		self.app = Application()
 		self.setGeometry(QRect(20, 20, 900, 700))
-		self.setWindowTitle("Fusion 360 Streamer")
+		self.setWindowTitle("Fusion 360 Streamer v" + version(__name__.split(".")[0]))
 
 		# Create progress bar and label
 		self.progress_bar = QProgressBar()

@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import fusion360_streamer
 from setuptools import setup
 import json
 import os
@@ -14,7 +15,7 @@ requirements = [package_name + package_data["version"] for package_name, package
 
 setup(
 	name="fusion360-streamer",
-	version="1.0.8",
+	version=fusion360_streamer.__version__,
 	description="Autodesk Fusion 360 Streamer python implementation",
 	long_description=open("README.md").read(),
 	author="Dimitris Zervas",
@@ -25,7 +26,7 @@ setup(
 	install_requires=requirements,
 	entry_points={
 		"console_scripts": [
-			"fusion360-streamer=fusion360_streamer.__main__",
+			"fusion360-streamer=fusion360_streamer.__main__:main",
 		],
 	},
 )

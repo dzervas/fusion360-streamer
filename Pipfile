@@ -13,3 +13,9 @@ fusion360-streamer = {editable = true, path = "."}
 [dev-packages]
 autopep8 = "*"
 pyinstaller = "*"
+
+pywin32 = {version = "*", sys_platform = "== 'win32'"}
+pywin32-ctypes = {version = "*", sys_platform = "== 'win32'"}
+pefile = {version = "*", sys_platform = "== 'win32'"}
+
+macholib = {version = "*", sys_platform = "== 'darwin'"}
