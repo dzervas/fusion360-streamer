@@ -59,14 +59,6 @@ jobs:
     needs: bump
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/setup-python@v2
-        with:
-          python-version: "3.10"
-
-      - name: Install Python dependencies
-        run: |
-          pip install pipenv
-          pipenv install --dev
 
       - name: Build wheel
         run: python setup.py sdist bdist_wheel
@@ -92,6 +84,9 @@ jobs:
         run: |
           pip install pipenv
           pipenv install --dev
+
+      - run: pipenv run pip install macholib
+        if: matrix.os == 'macos-latest'
 
       - name: Build executable
         run: pipenv run pyinstaller --onefile --clean --noconsole --distpath dist --workpath build --name fusion360-streamer fusion360_streamer/__main__.py
