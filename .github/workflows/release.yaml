@@ -61,11 +61,17 @@ jobs:
           password: ${{ secrets.PYPI_API_TOKEN }}
 
   pyinstaller:
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.os.runs-on }}
     needs: bump
     strategy:
       matrix:
-        os: ["windows-latest", "ubuntu-latest", "macos-latest"]
+        os:
+          - runs-on: ubuntu-latest
+            name: linux
+          - runs-on: windows-latest
+            name: windows
+          - runs-on: macos-latest
+            name: osx
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v2
@@ -78,7 +84,7 @@ jobs:
           pipenv install --dev
 
       - name: Build executable
-        run: pipenv run pyinstaller --onefile --clean --noconsole --distpath dist --workpath build --name fusion360-streamer fusion360_streamer/__main__.py
+        run: pipenv run pyinstaller --onefile --clean --noconsole --distpath dist --workpath build --name fusion360-streamer-${{ matrix.os.name }} fusion360_streamer/__main__.py
 
       - uses: actions/upload-artifact@v3
         with:
