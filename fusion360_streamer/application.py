@@ -1,7 +1,7 @@
 from .constants import FUSION360_APPID, WINDOWS_OSID, APPLICATION_JSON_URL, PACKAGE_JSON_URL, ARCHIVE_GET_URL, ARCHIVE_SAVE_URL, ARCHIVE_SEARCH_URL
 from .package import Package
 from datetime import datetime
-from humanize import naturalsize
+from typing import Iterator
 import requests
 
 
@@ -9,9 +9,9 @@ import requests
 class Application():
 	os_id: str = WINDOWS_OSID
 	app_id: str = FUSION360_APPID
-	session: requests.Session = None
-	full_json: dict = None
-	packages: list[Package] = []
+	session: requests.Session
+	full_json: dict
+	packages: list[Package]
 	sub_applications = []
 
 	def __init__(self, app_id=FUSION360_APPID, os_id=WINDOWS_OSID, session=requests.Session(), archive_timestamp=None):
@@ -96,15 +96,18 @@ class Application():
 			"sub-applications": self.full_json["properties"]["sub-applications"] if "sub-applications" in self.full_json["properties"] else None,
 		}
 
-	def snapshots(self, limit=20) -> list[dict]:
+	def snapshots(self, limit=20) -> Iterator[dict]:
 		"""Get the history info from the server."""
 
 		response = self.session.get(ARCHIVE_SEARCH_URL.format(limit, APPLICATION_JSON_URL.format(self.os_id, self.app_id)))
 
+		if not response.ok:
+			raise Exception("Error getting snapshot list: " + response.text)
+
 		for v in response.json()[1:]:
 			yield dict(zip(response.json()[0], v))
 
-	def available_versions(self, limit=20) -> list[tuple[datetime, str]]:
+	def available_versions(self, limit=20) -> Iterator[tuple[datetime, str]]:
 		last_version = None
 		if limit > 1:
 			for snapshot in self.snapshots(limit - 1):
@@ -117,7 +120,7 @@ class Application():
 			yield (datetime.now(), self.full_json["build-version"])
 
 	@property
-	def packages_info(self) -> list[dict]:
+	def packages_info(self) -> Iterator[dict]:
 		if len(self.packages) != len(self.full_json["packages"]):
 			self._get_packages()
 
@@ -125,7 +128,7 @@ class Application():
 			yield p.info
 
 	@property
-	def sub_applications_info(self) -> list[dict]:
+	def sub_applications_info(self) -> Iterator[dict]:
 		if len(self.sub_applications) != len(self.full_json["properties"]["sub-applications"]):
 			self._get_sub_applications()
 
@@ -150,7 +153,7 @@ class Application():
 			self._get_packages()
 
 		for p in self.packages:
-			p.extract(output_dir, recurse)
+			p.extract(output_dir)
 
 		if recurse:
 			for p in self.sub_applications:

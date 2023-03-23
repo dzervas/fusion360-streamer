@@ -1,0 +1,61 @@
+---
+
+name: Version bump and release
+on:
+  workflow_dispatch:
+    inputs:
+      level:
+        type: choice
+        description: "New version bump"
+        required: true
+        options:
+          - major
+          - minor
+          - patch
+        default: patch
+
+jobs:
+  bump:
+    runs-on: ubuntu-latest
+    permissions:
+      # Give the default GITHUB_TOKEN write permission to commit and push the
+      # added or changed files to the repository.
+      contents: write
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Find last version from tag
+        id: get-version
+        run: echo "version=$(grep 'version=' setup.py | command grep -o '[0-9.-]\+')" >> $GITHUB_OUTPUT
+
+      - uses: actions-ecosystem/action-bump-semver@v1
+        id: semver
+        with:
+          current_version: ${{ steps.get-version.outputs.version }}
+          level: ${{ github.event.inputs.level }}
+
+      - name: Bump setup.py version
+        run: sed -Ei 's/(^\s+version=)"${{ steps.get-version.outputs.version }}"/\1"${{ steps.semver.outputs.new_version }}"/' setup.py
+
+      - name: Commit changes
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          branch: main
+          commit_message: Bump version to ${{ steps.semver.outputs.new_version }}
+          tagging_message: "v${{ steps.semver.outputs.new_version }}"
+
+      - name: Create release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: "v${{ steps.semver.outputs.new_version }}"
+          release_name: "Fusion 360 Streamer v${{ steps.semver.outputs.new_version }}"
+
+      - name: Build wheel
+        run: python setup.py sdist bdist_wheel
+
+      - name: Upload to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          password: ${{ secrets.PYPI_API_TOKEN }}

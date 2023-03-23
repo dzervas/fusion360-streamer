@@ -8,14 +8,14 @@
 			"name": "GUI",
 			"type": "python",
 			"request": "launch",
-			"module": "fusion360-streamer",
+			"module": "fusion360_streamer",
 			"justMyCode": true
 		},
 		{
 			"name": "Archive",
 			"type": "python",
 			"request": "launch",
-			"module": "fusion360-streamer",
+			"module": "fusion360_streamer",
 			"justMyCode": true,
 			"env": {
 				"STORE_TO_ARCHIVE": "1"

@@ -14,7 +14,7 @@ requirements = [package_name + package_data["version"] for package_name, package
 
 setup(
 	name="fusion360-streamer",
-	version="1.0",
+	version="1.0.0",
 	description="Autodesk Fusion 360 Streamer python implementation",
 	long_description=open("README.md").read(),
 	author="Dimitris Zervas",

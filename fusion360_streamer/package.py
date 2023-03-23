@@ -16,11 +16,11 @@ def sha1sum(filename):
 
 
 class Package():
-	source_id: str = None
-	size: str = None
-	destination: str = None
-	_cfg_src: str = None
-	json: dict = None
+	source_id: str
+	size: str
+	destination: str
+	_cfg_src: str
+	json: dict
 
 	def __init__(self, package_json):
 		self.json = package_json

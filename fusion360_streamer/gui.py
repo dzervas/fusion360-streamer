@@ -7,6 +7,7 @@ from PyQt5.QtCore import QRect
 class Gui(QWidget):
 	def __init__(self):
 		super().__init__()
+		self.app = Application()
 		self.setGeometry(QRect(20, 20, 900, 700))
 		self.setWindowTitle("Fusion 360 Streamer")
 
@@ -20,15 +21,16 @@ class Gui(QWidget):
 		# Platform dropdown
 		self.platformCombo = QComboBox()
 		self.platformCombo.addItems(["Windows", "Mac"])
+		self.platformCombo.currentIndexChanged.connect(self.platform_changed)
 
 		# Version VBox dropdown
-		# versionCombo = QComboBox()
-		# versionCombo.addItems(["Option 1", "Option 2", "Option 3"])
-		# refreshBtn = QPushButton("Refresh", self)
-		# refreshBtn.clicked.connect(self.refresh_clicked)
-		# vboxVersion = QHBoxLayout()
-		# vboxVersion.addWidget(versionCombo)
-		# vboxVersion.addWidget(refreshBtn)
+		self.versionCombo = QComboBox()
+		self.versionCombo.addItems(["<Press Refresh>"])
+		refreshBtn = QPushButton("Refresh", self)
+		refreshBtn.clicked.connect(self.refresh_clicked)
+		vboxVersion = QHBoxLayout()
+		vboxVersion.addWidget(self.versionCombo)
+		vboxVersion.addWidget(refreshBtn)
 
 		# Output directory selection
 		hboxOutput = QHBoxLayout()
@@ -57,8 +59,7 @@ class Gui(QWidget):
 		# Main VBox
 		vbox = QVBoxLayout()
 		vbox.addWidget(self.platformCombo)
-		# TODO: Add version selection via archive
-		# vbox.addLayout(vboxVersion)
+		vbox.addLayout(vboxVersion)
 		# TODO: Add progress bar
 		# vbox.addLayout(hboxProgress)
 		vbox.addLayout(hboxOutput)
@@ -66,9 +67,19 @@ class Gui(QWidget):
 
 		self.setLayout(vbox)
 
-	# Button click functions
+	def platform_changed(self):
+		if self.platformCombo.currentText() == "Windows":
+			self.app = Application(os_id=WINDOWS_OSID)
+		elif self.platformCombo.currentText() == "Mac":
+			self.app = Application(os_id=OSX_OSID)
+
+		self.refresh_clicked()
+
 	def refresh_clicked(self):
-		self.progress_bar.setValue(25)
+		self.versionCombo.clear()
+		versions = [x[1] for x in self.app.available_versions()]
+		versions.reverse()
+		self.versionCombo.addItems(versions)
 
 	def select_output_dir(self):
 		folder = QFileDialog.getExistingDirectory(self, 'Select Folder')
@@ -76,12 +87,10 @@ class Gui(QWidget):
 		print(f'Selected output folder: {folder}')
 
 	def download_clicked(self):
-		app = Application(os_id=WINDOWS_OSID if self.platformCombo.currentText() == "Windows" else OSX_OSID)
-		app.download(output_dir=self.outputEdit.text(), recurse=self.recurseCheck.isChecked())
+		self.app.download(output_dir=self.outputEdit.text(), recurse=self.recurseCheck.isChecked())
 
 	def extract_clicked(self):
-		app = Application(os_id=WINDOWS_OSID if self.platformCombo.currentText() == "Windows" else OSX_OSID)
-		app.extract(output_dir=self.outputEdit.text(), recurse=self.recurseCheck.isChecked())
+		self.app.extract(output_dir=self.outputEdit.text(), recurse=self.recurseCheck.isChecked())
 
 	def exit_clicked(self):
 		print("Bye!")

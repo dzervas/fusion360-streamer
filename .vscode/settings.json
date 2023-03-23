@@ -3,5 +3,6 @@
 		"naturaldate",
 		"naturalsize",
 		"OSID"
-	]
+	],
+	"python.analysis.typeCheckingMode": "basic"
 }
