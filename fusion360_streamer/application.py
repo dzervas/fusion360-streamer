@@ -1,4 +1,4 @@
-from fusion360_streamer.constants import FUSION360_APPID, WINDOWS_OSID, APPLICATION_JSON_URL, PACKAGE_JSON_URL, ARCHIVE_GET_URL, ARCHIVE_SAVE_URL, ARCHIVE_SEARCH_URL
+from fusion360_streamer.constants import FUSION360_APPID, WINDOWS_OSID, APPLICATION_JSON_URL, PACKAGE_JSON_URL, ARCHIVE_GET_URL, ARCHIVE_SAVE_URL, ARCHIVE_SEARCH_URL, ARCHIVE_AVAILABILITY_URL
 from fusion360_streamer.package import Package
 from datetime import datetime
 from typing import Iterator
@@ -96,6 +96,32 @@ class Application():
 			"sub-applications": self.full_json["properties"]["sub-applications"] if "sub-applications" in self.full_json["properties"] else None,
 		}
 
+	@property
+	def packages_info(self) -> Iterator[dict]:
+		if len(self.packages) != len(self.full_json["packages"]):
+			self._get_packages()
+
+		for p in self.packages:
+			yield p.info
+
+	@property
+	def sub_applications_info(self) -> Iterator[dict]:
+		if len(self.sub_applications) != len(self.full_json["properties"]["sub-applications"]):
+			self._get_sub_applications()
+
+		for p in self.sub_applications:
+			yield p.info
+
+	def get_version(self, target: str):
+		if target == "latest":
+			return Application(self.app_id, self.os_id, self.session)
+
+		for version in self.available_versions():
+			if version[1] == target:
+				return Application(self.app_id, self.os_id, self.session, version[0].strftime("%Y%m%d%H%M%S"))
+
+		raise Exception("Version not found")
+
 	def snapshots(self, limit=20) -> Iterator[dict]:
 		"""Get the history info from the server."""
 
@@ -118,22 +144,6 @@ class Application():
 
 		if last_version != self.full_json["build-version"]:
 			yield (datetime.now(), self.full_json["build-version"])
-
-	@property
-	def packages_info(self) -> Iterator[dict]:
-		if len(self.packages) != len(self.full_json["packages"]):
-			self._get_packages()
-
-		for p in self.packages:
-			yield p.info
-
-	@property
-	def sub_applications_info(self) -> Iterator[dict]:
-		if len(self.sub_applications) != len(self.full_json["properties"]["sub-applications"]):
-			self._get_sub_applications()
-
-		for p in self.sub_applications:
-			yield p.info
 
 	def download(self, output_dir="data", recurse=True) -> None:
 		"""Download the packages."""

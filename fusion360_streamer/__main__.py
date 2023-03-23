@@ -14,7 +14,8 @@ def main():
 	parser.add_argument("--packages-info", action="store_true", help="Print the packages info")
 	parser.add_argument("--sub-applications-info", action="store_true", help="Print the sub applications info")
 	parser.add_argument("--app-id", type=str, default=FUSION360_APPID, help="The app id")
-	parser.add_argument("-v", "--versions", nargs="?", const=20, default=0, type=int, help="Get version history of the app using the Wayback Machine API")
+	parser.add_argument("-v", "--version", type=str, default="latest", help="The version to download (default: latest)")
+	parser.add_argument("--versions", nargs="?", const=20, default=0, type=int, help="Get version history of the app using the Wayback Machine API")
 	parser.add_argument("-p", "--platform", type=str, choices=["windows", "win", "osx", "mac"], default="windows", help="The platform id")
 	parser.add_argument("-r", "--recurse", action="store_true", help="Recurse into sub applications")
 	parser.add_argument("-o", "--output-dir", type=str, default="data", help="The output directory")
@@ -31,6 +32,9 @@ def main():
 		exit(1)
 
 	app = Application(app_id=args.app_id, os_id=platform_id)
+
+	if args.version != "latest":
+		app = app.get_version(args.version)
 
 	if os.getenv("STORE_TO_ARCHIVE"):
 		print("Storing whole version to archive.org if required")

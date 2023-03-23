@@ -109,5 +109,8 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           tag_name: "v${{ needs.bump.outputs.version }}"
-          release_name: "Fusion 360 Streamer v${{ needs.bump.outputs.version }}"
+          name: "Fusion 360 Streamer v${{ needs.bump.outputs.version }}"
           files: dist/*
+          body: |
+            Pypi package is available at https://pypi.org/project/fusion360-streamer/${{ needs.bump.outputs.version }}/
+            Install using `pip install --upgrade fusion360-streamer`

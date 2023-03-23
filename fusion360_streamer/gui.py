@@ -77,6 +77,9 @@ class Gui(QWidget):
 
 		self.refresh_clicked()
 
+	def version_changed(self):
+		self.app = self.app.get_version(self.versionCombo.currentText())
+
 	def refresh_clicked(self):
 		self.versionCombo.clear()
 		versions = [x[1] for x in self.app.available_versions()]
