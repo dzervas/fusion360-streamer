@@ -18,6 +18,7 @@ setup(
 	version=fusion360_streamer.__version__,
 	description="Autodesk Fusion 360 Streamer python implementation",
 	long_description=open("README.md").read(),
+	long_description_content_type="text/markdown",
 	author="Dimitris Zervas",
 	author_email="dzervas@dzervas.gr",
 	url="https://github.com/dzervas/fusion360-streamer",

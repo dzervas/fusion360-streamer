@@ -51,6 +51,8 @@ jobs:
     needs: bump
     steps:
       - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.head_ref }}
 
       - name: Build wheel
         run: python setup.py sdist bdist_wheel
@@ -74,6 +76,8 @@ jobs:
             name: osx
     steps:
       - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.head_ref }}
       - uses: actions/setup-python@v2
         with:
           python-version: "3.10"
