@@ -14,9 +14,9 @@ jobs:
       - name: Install Python dependencies
         run: |
           pip install pipenv
-          pipenv install --dev
+          pipenv install --dev -e .
 
       - name: Store to Archive.org
-        run: pipenv run python -m fusion360-streamer
+        run: fusion360-streamer
         env:
           STORE_TO_ARCHIVE: 1

@@ -1,4 +1,4 @@
-from .constants import PACKAGE_TAR_URL, ARCHIVE_GET_URL, ARCHIVE_SAVE_URL
+from fusion360_streamer.constants import PACKAGE_TAR_URL, ARCHIVE_GET_URL, ARCHIVE_SAVE_URL
 from hashlib import sha1
 from humanize import naturalsize
 import os

@@ -1,5 +1,5 @@
-from .constants import FUSION360_APPID, WINDOWS_OSID, APPLICATION_JSON_URL, PACKAGE_JSON_URL, ARCHIVE_GET_URL, ARCHIVE_SAVE_URL, ARCHIVE_SEARCH_URL
-from .package import Package
+from fusion360_streamer.constants import FUSION360_APPID, WINDOWS_OSID, APPLICATION_JSON_URL, PACKAGE_JSON_URL, ARCHIVE_GET_URL, ARCHIVE_SAVE_URL, ARCHIVE_SEARCH_URL
+from fusion360_streamer.package import Package
 from datetime import datetime
 from typing import Iterator
 import requests

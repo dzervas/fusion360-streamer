@@ -12,3 +12,4 @@ fusion360-streamer = {editable = true, path = "."}
 
 [dev-packages]
 autopep8 = "*"
+pyinstaller = "*"

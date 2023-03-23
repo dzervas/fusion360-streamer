@@ -1,7 +1,8 @@
-from .application import Application
-from .constants import WINDOWS_OSID, OSX_OSID
+from fusion360_streamer.application import Application
+from fusion360_streamer.constants import WINDOWS_OSID, OSX_OSID
 from PyQt5.QtWidgets import QWidget, QPushButton, QProgressBar, QLabel, QComboBox, QVBoxLayout, QHBoxLayout, QCheckBox, QFileDialog, QLineEdit
 from PyQt5.QtCore import QRect
+import sys
 
 
 class Gui(QWidget):
@@ -94,4 +95,4 @@ class Gui(QWidget):
 
 	def exit_clicked(self):
 		print("Bye!")
-		exit(0)
+		sys.exit(0)

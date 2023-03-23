@@ -6,7 +6,7 @@ on:
     inputs:
       level:
         type: choice
-        description: "New version bump"
+        description: "Version bump level"
         required: true
         options:
           - major
@@ -21,6 +21,8 @@ jobs:
       # Give the default GITHUB_TOKEN write permission to commit and push the
       # added or changed files to the repository.
       contents: write
+    outputs:
+      version: ${{ steps.semver.outputs.new_version }}
     steps:
       - uses: actions/checkout@v3
 
@@ -52,10 +54,62 @@ jobs:
           tag_name: "v${{ steps.semver.outputs.new_version }}"
           release_name: "Fusion 360 Streamer v${{ steps.semver.outputs.new_version }}"
 
+  pypi:
+    runs-on: ubuntu-latest
+    needs: bump
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.10
+
       - name: Build wheel
         run: python setup.py sdist bdist_wheel
-
       - name: Upload to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           password: ${{ secrets.PYPI_API_TOKEN }}
+
+  pyinstaller:
+    runs-on: ${{ matrix.os }}
+    needs: bump
+    strategy:
+      matrix:
+        os: ["windows-latest", "ubuntu-latest", "macos-latest"]
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.10
+
+      - name: Install Python dependencies
+        run: |
+          pip install pipenv
+          pipenv install --dev
+
+      - name: Build executable
+        run: pipenv run pyinstaller --onefile --clean --noconsole --distpath dist --workpath build --name fusion360-streamer fusion360_streamer/__main__.py
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: binaries
+          path: dist/fusion360-streamer*
+
+  release:
+    runs-on: ubuntu-latest
+    needs: [bump, pyinstaller]
+    steps:
+      - name: Download binaries
+        uses: actions/download-artifact@v2
+        with:
+          name: binaries
+          path: dist
+
+      - name: Create release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: "v${{ needs.bump.outputs.version }}"
+          release_name: "Fusion 360 Streamer v${{ needs.bump.outputs.version }}"
+          files: dist/*

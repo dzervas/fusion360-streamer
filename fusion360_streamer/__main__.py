@@ -1,5 +1,5 @@
-from .application import Application
-from .constants import FUSION360_APPID, WINDOWS_OSID, OSX_OSID
+from fusion360_streamer.application import Application
+from fusion360_streamer.constants import FUSION360_APPID, WINDOWS_OSID, OSX_OSID
 from pprint import pprint
 from humanize import naturaldate
 
@@ -50,7 +50,7 @@ elif args.download or args.extract:
 	if args.extract:
 		app.extract(output_dir=args.output_dir, recurse=args.recurse)
 else:
-	from .gui import Gui
+	from fusion360_streamer.gui import Gui
 	from PyQt5.QtWidgets import QApplication
 
 	print("Starting GUI")
