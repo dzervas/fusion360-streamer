@@ -1,6 +1,7 @@
 name: Archive Version
 
 on:
+  workflow_dispatch:
   schedule:
     - cron: "0 0 * * *"
 
@@ -8,13 +9,8 @@ jobs:
   store:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
       - name: Install Python dependencies
-        run: |
-          pip install pipenv
-          pipenv install --dev -e .
+        run: pip install fusion360-streamer
 
       - name: Store to Archive.org
         run: fusion360-streamer
