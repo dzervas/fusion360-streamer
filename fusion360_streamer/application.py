@@ -66,7 +66,7 @@ class Application():
 			current_version = archive_version
 			archive_version = None
 
-		if archive_version != current_version:
+		if archive_version != current_version and archive_version is not None:
 			print("Storing version", current_version, "of application", self.full_json["properties"]["display-name"])
 			self.session.get(ARCHIVE_SAVE_URL.format(APPLICATION_JSON_URL.format(self.os_id, self.app_id)))
 
