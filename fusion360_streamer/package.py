@@ -27,7 +27,7 @@ class Package():
 		self.source_id = package_json["properties"]["source-id"] if "source-id" in package_json["properties"] else "Unknown"
 		self.size = naturalsize(package_json["properties"]["size"]) if "size" in package_json["properties"] else "Unknown"
 		self._cfg_src = package_json["properties"]["_cfg-src"] if "_cfg-src" in package_json["properties"] else "Unknown"
-		self.destination = package_json["properties"]["destination"] if "destination" in package_json["properties"] else "Unknown"
+		self.destination = package_json["root"]["destination"] if "destination" in package_json["properties"] else "Unknown"
 
 	@property
 	def info(self) -> dict:

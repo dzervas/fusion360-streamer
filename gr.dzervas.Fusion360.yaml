@@ -1,0 +1,57 @@
+---
+app-id: gr.dzervas.Fusion360
+runtime: org.freedesktop.Platform
+runtime-version: 22.08
+sdk: org.freedesktop.Sdk
+sdk-version: 22.08
+
+command: wine
+command-arg: ["/app/bin/wine", "/app/bin/fusion360/extracted/Unknown/Fusion360.exe"]
+build-options:
+env:
+  - LANG=en_US.UTF-8
+
+modules:
+  - name: wine-git
+    buildsystem: simple
+    sources:
+      - type: git
+        url: https://gitlab.winehq.org/novenary/wine.git/
+        branch: owned-popups
+    build-commands:
+      - ./configure --enable-win64
+      - make -j 5
+    install-commands:
+      - make install
+    build-options:
+      env:
+        - CFLAGS: "-O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions --param=ssp-buffer-size=4 -m64 -mtune=generic"
+        - CXXFLAGS: "-O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions --param=ssp-buffer-size=4 -m64 -mtune=generic"
+        - PREFIX: "/app"
+
+  - name: wine-nine-standalone-git
+    buildsystem: meson
+    sources:
+      - type: git
+        url: https://github.com/iXit/wine-nine-standalone
+        branch: main
+    build-commands:
+      - ./release.sh
+      - tar xf gallium-nine-standalone.tar.gz
+    install-commands:
+      - ./gallium-nine-standalone/tools/nine-install.sh
+
+  - name: fusion360-streamer
+    buildsystem: simple
+    sources:
+      - type: git
+        url: https://github.com/dzervas/fusion360-streamer.git
+        branch: main
+    install-commands:
+      - python setup.py install --prefix=/app
+
+  - name: fusion360
+    buildsystem: simple
+    install-commands:
+      - winetricks -q msxml6 win10
+      - fusion360-streamer -e -o /app/bin/fusion360

@@ -4,5 +4,6 @@
 		"naturalsize",
 		"OSID"
 	],
-	"python.analysis.typeCheckingMode": "basic"
+	"python.analysis.typeCheckingMode": "basic",
+	"git.ignoreLimitWarning": true
 }
