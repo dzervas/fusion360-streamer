@@ -68,12 +68,12 @@ class Package():
 
 			print("Downloading package", file)
 			if timestamp:
-				response = session.get(ARCHIVE_GET_URL.format(timestamp, PACKAGE_TAR_URL.format(file)))
+				response = session.get(ARCHIVE_GET_URL.format(timestamp, PACKAGE_TAR_URL.format(f)))
 			else:
-				response = session.get(PACKAGE_TAR_URL.format(file))
+				response = session.get(PACKAGE_TAR_URL.format(f))
 
-			with open(os.path.join(output_dir, file), "wb") as f:
-				f.write(response.content)
+			with open(os.path.join(output_dir, file), "wb") as fd:
+				fd.write(response.content)
 
 	def extract(self, output_dir) -> None:
 		if "non-patched" not in self.json:

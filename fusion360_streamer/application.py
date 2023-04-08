@@ -25,6 +25,7 @@ class Application():
 	def _get_full_json(self, archive_timestamp=None) -> dict:
 		"""Get the streamer url from the server."""
 
+		print("Getting application JSON")
 		response = None
 		url = APPLICATION_JSON_URL.format(self.os_id, self.app_id)
 		if archive_timestamp is not None:
