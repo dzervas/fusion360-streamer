@@ -1,4 +1,4 @@
-from fusion360_streamer.constants import FUSION360_APPID, WINDOWS_OSID, APPLICATION_JSON_URL, PACKAGE_JSON_URL, ARCHIVE_GET_URL, ARCHIVE_SAVE_URL, ARCHIVE_SEARCH_URL, ARCHIVE_AVAILABILITY_URL
+from fusion360_streamer.constants import FUSION360_APPID, WINDOWS_OSID, APPLICATION_JSON_URL, PACKAGE_JSON_URL, ARCHIVE_GET_URL, ADMIN_INSTALL_URL, ARCHIVE_SAVE_URL, ARCHIVE_SEARCH_URL, ARCHIVE_AVAILABILITY_URL
 from fusion360_streamer.package import Package
 from datetime import datetime
 from typing import Iterator
@@ -70,6 +70,8 @@ class Application():
 		if archive_version != current_version and archive_version is not None:
 			print("Storing version", current_version, "of application", self.full_json["properties"]["display-name"])
 			self.session.get(ARCHIVE_SAVE_URL.format(APPLICATION_JSON_URL.format(self.os_id, self.app_id)))
+			if self.full_json["properties"]["display-name"] == "Autodesk Fusion 360":
+				self.session.get(ARCHIVE_SAVE_URL.format(ADMIN_INSTALL_URL))
 
 			self._get_packages(True)
 			for p in self.packages:
