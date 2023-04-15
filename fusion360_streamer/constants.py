@@ -15,6 +15,7 @@ APPIDS = {
 APPLICATION_JSON_URL = "https://dl.appstreaming.autodesk.com/production/{}/{}/full.json"
 PACKAGE_JSON_URL = "https://dl.appstreaming.autodesk.com/production/packages/{}.json"
 PACKAGE_TAR_URL = "https://dl.appstreaming.autodesk.com/production/packages/{}.tar.xz"
+ADMIN_INSTALL_URL = "https://dl.appstreaming.autodesk.com/production/installers/Fusion%20360%20Admin%20Install.exe"
 ARCHIVE_GET_URL = "https://web.archive.org/web/{}id_/{}"
 ARCHIVE_SAVE_URL = "https://web.archive.org/save/{}"
 ARCHIVE_SEARCH_URL = "https://web.archive.org/cdx/search?limit={}&filter=statuscode:200&output=json&url={}"
