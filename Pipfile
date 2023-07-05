@@ -8,7 +8,7 @@ requests = ">=2.31.0"
 prettyformatter = "*"
 humanize = "4.7.0"
 pyqt5 = "*"
-fusion360-streamer = {editable = true, path = "."}
+# fusion360-streamer = {editable = true, path = "."}
 
 [dev-packages]
 autopep8 = "*"

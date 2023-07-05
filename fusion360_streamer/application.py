@@ -13,6 +13,7 @@ class Application():
 	full_json: dict
 	packages: list[Package]
 	sub_applications = []
+	archive_timestamp: str | None = None
 
 	def __init__(self, app_id=FUSION360_APPID, os_id=WINDOWS_OSID, session=requests.Session(), archive_timestamp=None):
 		self.app_id = app_id
@@ -21,6 +22,10 @@ class Application():
 		self.sub_applications = []
 		self.packages = []
 		self.full_json = self._get_full_json(archive_timestamp)
+		self.archive_timestamp = archive_timestamp
+
+		if archive_timestamp is not None:
+			print("Checking availability of archive", archive_timestamp)
 
 	def _get_full_json(self, archive_timestamp=None) -> dict:
 		"""Get the streamer url from the server."""
@@ -44,8 +49,15 @@ class Application():
 				self.session.get(ARCHIVE_SAVE_URL.format(url))
 				print("\tArchived")
 
+			if self.archive_timestamp is not None:
+				url = ARCHIVE_GET_URL.format(self.archive_timestamp, url)
+
 			response = self.session.get(url)
-			self.packages.append(Package(response.json()))
+			try:
+				self.packages.append(Package(response.json()))
+			except requests.JSONDecodeError:
+				print("Error parsing JSON response from", url)
+				exit(1)
 
 	def _get_sub_applications(self) -> None:
 		print("\t>>>", self.app_id)
@@ -54,7 +66,7 @@ class Application():
 			return
 
 		for p in self.full_json["properties"]["sub-applications"]:
-			self.sub_applications.append(Application(p, self.os_id, self.session))
+			self.sub_applications.append(Application(p, self.os_id, self.session, self.archive_timestamp))
 
 	def _store_to_archive_if_required(self) -> None:
 		"""Store the full.json to the archive if it is not already there."""

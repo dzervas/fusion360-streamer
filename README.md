@@ -26,13 +26,14 @@ and run it with `fusion360-streamer`.
 
 ### From source (for developers)
 
-Clone the repository and run `python -m fusion360_streamer`.
+Clone the repository, use pipenv to install the dev dependencies and run `python -m fusion360_streamer`:
 
 ```bash
 git clone https://github.com/dzervas/fusion360-streamer.git
 cd fusion360-streamer
 pipenv install --dev
-pipenv run python -m fusion360_streamer
+pipenv shell
+python -m fusion360_streamer
 ```
 
 ## Why did you write this?

@@ -67,10 +67,10 @@ class Package():
 				continue
 
 			print("Downloading package", file)
+			url = PACKAGE_TAR_URL.format(f)
 			if timestamp:
-				response = session.get(ARCHIVE_GET_URL.format(timestamp, PACKAGE_TAR_URL.format(f)))
-			else:
-				response = session.get(PACKAGE_TAR_URL.format(f))
+				response = ARCHIVE_GET_URL.format(timestamp, url)
+			response = session.get(url)
 
 			with open(os.path.join(output_dir, file), "wb") as fd:
 				fd.write(response.content)
