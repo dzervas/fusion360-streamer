@@ -213,20 +213,12 @@
             "version": "==2.0.4"
         },
         "macholib": {
-            "hashes": [
-                "sha256:44c40f2cd7d6726af8fa6fe22549178d3a4dfecc35a9cd15ea916d9c83a688e0",
-                "sha256:557bbfa1bb255c20e9abafe7ed6cd8046b48d9525db2f9b77d3122a63a2a8bf8"
-            ],
             "markers": "sys_platform == 'darwin'",
-            "version": "==1.16.2"
+            "version": "*"
         },
         "pefile": {
-            "hashes": [
-                "sha256:82e6114004b3d6911c77c3953e3838654b04511b8b66e8583db70c65998017dc",
-                "sha256:da185cd2af68c08a6cd4481f7325ed600a88f6a813bad9dea07ab3ef73d8d8d6"
-            ],
             "markers": "sys_platform == 'win32'",
-            "version": "==2023.2.7"
+            "version": "*"
         },
         "pycodestyle": {
             "hashes": [
@@ -264,15 +256,12 @@
             "version": "==2023.8"
         },
         "pywin32": {
-            "markers": "sys_platform == 'win32'"
+            "markers": "sys_platform == 'win32'",
+            "version": "*"
         },
         "pywin32-ctypes": {
-            "hashes": [
-                "sha256:3426e063bdd5fd4df74a14fa3cf80a0b42845a87e1d1e81f6549f9daec593a60",
-                "sha256:bf490a1a709baf35d688fe0ecf980ed4de11d2b3e37b51e5442587a75d9957e7"
-            ],
             "markers": "sys_platform == 'win32'",
-            "version": "==0.2.2"
+            "version": "*"
         },
         "setuptools": {
             "hashes": [
