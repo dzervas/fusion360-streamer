@@ -8,14 +8,15 @@ requests = ">=2.31.0"
 prettyformatter = "*"
 humanize = "4.7.0"
 pyqt5 = "*"
-# fusion360-streamer = {editable = true, path = "."}
 
 [dev-packages]
 autopep8 = "*"
 pyinstaller = "*"
 
+# Windows
 pywin32 = {version = "*", markers = "sys_platform == 'win32'"}
 pywin32-ctypes = {version = "*", markers = "sys_platform == 'win32'"}
 pefile = {version = "*", markers = "sys_platform == 'win32'"}
 
-macholib = {version = "*", markers = "sys_platform == 'darwin'"}
+# Mac
+macholib = {version = "~=1.16", markers = "sys_platform == 'darwin'"}
