@@ -6,7 +6,7 @@ name = "pypi"
 [packages]
 requests = ">=2.31.0"
 prettyformatter = "*"
-humanize = "4.7.0"
+humanize = "4.8.0"
 pyqt5 = "*"
 
 [dev-packages]
